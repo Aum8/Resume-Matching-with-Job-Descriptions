@@ -10,3 +10,8 @@ jobs.py extracts job descriptions from jacob-hugging-face/job-descriptions datas
 I tried to combine both these scripts for matching the resumes against the descriptions, but the results are unsatisfactory.
 
 Manually using the extract.py script and jobs.py script to match the jobs is more accurate.
+
+
+
+P.S. - I'm new to extracting data from pdfs/texts so I had to learn all this to implement it. So this was a great learning experience.
+Thank you !
