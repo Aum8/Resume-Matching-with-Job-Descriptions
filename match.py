@@ -61,41 +61,36 @@ def calculate_matching_score(job, resume):
     else:
         resume_education = "N/A"
 
-    # Calculate the Jaccard similarity between job skills and resume skills
+    
     resume_skills = set(resume["Skills"].split(", "))
     skill_similarity = len(job_skills.intersection(resume_skills)) / len(job_skills.union(resume_skills))
 
-    # Education matching score (exact match if 'Education' is not "N/A")
     education_match = 1 if resume_education != "N/A" and job["Education"].lower() == resume_education.lower() else 0
 
-    # Overall matching score (you can adjust the weights as needed)
+    # Overall matching score
     overall_score = 0.7 * skill_similarity + 0.3 * education_match
 
     return overall_score
 def calculate_matching_score(job, resume):
     job_skills = set(job.get("Required Skills", {}).keys()) if isinstance(job.get("Required Skills"), dict) else set()
-    
-    # Check if 'Education' key exists in the resume dictionary
+
     resume_education = resume.get("Education", "N/A")
 
-    # Calculate the Jaccard similarity between job skills and resume skills
     resume_skills = set(resume["Skills"].split(", "))
     skill_similarity = len(job_skills.intersection(resume_skills)) / len(job_skills.union(resume_skills))
 
-    # Education matching score (exact match if 'Education' is not "N/A")
     if "Education" in job:
         education_match = 1 if resume_education != "N/A" and job["Education"].lower() == resume_education.lower() else 0
     else:
         education_match = 0  # No education requirement, so no match score
 
-    # Overall matching score (you can adjust the weights as needed)
+    # Overall matching score
     overall_score = 0.7 * skill_similarity + 0.3 * education_match
 
     return overall_score
 
 
 
-# Create a dictionary to store candidate details
 all_candidates = {}
 
 # Iterate through all resume PDFs in a folder
@@ -111,7 +106,7 @@ for filename in os.listdir(resume_folder):
         # Store resume details in the dictionary
         all_candidates[filename] = resume_details
 
-# Create a dictionary to store top candidates for each job
+# Create a dictionary to store top candidates
 top_candidates = {}
 
 # Match candidates for each job
@@ -122,16 +117,16 @@ for i, job_description in enumerate(job_descriptions):
         "Required Skills": required_skills_list[i],
     }
 
-    # Calculate scores for all candidates (resumes)
+    # Calculate scores for all candidates
     candidate_scores = []
     for candidate_name, candidate_details in all_candidates.items():
         score = calculate_matching_score(job, candidate_details)
         candidate_scores.append((score, candidate_name))
 
-    # Sort candidates by score (highest to lowest)
+    # Sort candidates by score
     candidate_scores.sort(reverse=True, key=lambda x: x[0])
 
-    # Select the top 5 candidates for each job
+    # top 5 candidates
     top_candidates[job["Category"]] = candidate_scores[:5]
 
 # Print the top 5 candidates for each job
